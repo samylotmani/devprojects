@@ -1,23 +1,22 @@
-import logo from './logo.svg';
+import { useState } from 'react';
 import './App.css';
+import SpeechRecorder from './components/SpeechRecorder';
+import AnalysisResults from './components/AnalysisResults';
+import { detectFakeNews } from './services/fakeNewsService';
 
 function App() {
+  const [results, setResults] = useState([]);
+
+  const handleTranscription = async (text) => {
+    const analysis = await detectFakeNews(text);
+    setResults(analysis);
+  };
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <h1>Fake News Detector</h1>
+      <SpeechRecorder onTranscription={handleTranscription} />
+      <AnalysisResults results={results} />
     </div>
   );
 }
